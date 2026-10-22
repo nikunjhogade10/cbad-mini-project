@@ -1,0 +1,10 @@
+.git
+.gitignore
+.dockerignore
+node_modules/
+.npm/
+package.json
+package-lock.json
+*.py
+brain.md
+.gemini/

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings — Student Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Student Portal</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Settings</span></nav>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Settings</h1>
+          <p class="label-text">Manage your account preferences</p>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tabs" data-tab-group="settings">
+        <span class="tab-item active" data-tab="settings" data-tab-target="profile">Profile</span>
+        <span class="tab-item" data-tab="settings" data-tab-target="security">Security</span>
+        <span class="tab-item" data-tab="settings" data-tab-target="notifications">Notifications</span>
+        <span class="tab-item" data-tab="settings" data-tab-target="appearance">Appearance</span>
+      </div>
+
+      <!-- Profile Tab -->
+      <div data-panel="settings" data-panel-id="profile">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Profile Information</div></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:var(--space-5);margin-bottom:var(--space-6);padding-bottom:var(--space-6);border-bottom:1px solid var(--border-default);">
+              <div class="avatar avatar-xl" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;font-size:var(--text-2xl);">NH</div>
+              <div>
+                <div style="font-weight:var(--fw-semibold);margin-bottom:var(--space-1);">Nikunj Santosh Hogade</div>
+                <div style="font-size:var(--text-sm);color:var(--text-secondary);">MIT2026CS101 · CSE Division A</div>
+                <button class="btn btn-secondary btn-sm mt-2" onclick="showToast('info','Change Photo','Photo upload feature coming soon.')">Change Photo</button>
+              </div>
+            </div>
+            <div class="form-row" style="gap:var(--space-5);">
+              <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" value="Nikunj Santosh Hogade"/></div>
+              <div class="form-group"><label class="form-label">Email Address</label><input class="form-control" value="nikunj.hogade@mit.edu.in" disabled/><div class="form-hint">Contact admin to change your email.</div></div>
+              <div class="form-group"><label class="form-label">Phone Number</label><input class="form-control" value="+91 98765 43210"/></div>
+              <div class="form-group"><label class="form-label">Date of Birth</label><input class="form-control" type="date" value="2005-03-15"/></div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" onclick="showToast('success','Profile Saved','Your profile changes have been saved.')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Tab -->
+      <div data-panel="settings" data-panel-id="security" class="hidden">
+        <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+          <!-- Change Password -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Change Password</div></div>
+            <div class="card-body">
+              <div class="form-row" style="max-width:600px;">
+                <div class="form-group form-row-col-1"><label class="form-label">Current Password</label><input class="form-control" type="password" placeholder="Enter current password"/></div>
+                <div class="form-group">
+                  <label class="form-label">New Password</label>
+                  <input class="form-control" type="password" id="newPassword" placeholder="Enter new password"/>
+                  <div class="strength-bar-wrap" id="strengthBar"><div class="strength-bar-segment"></div><div class="strength-bar-segment"></div><div class="strength-bar-segment"></div><div class="strength-bar-segment"></div></div>
+                  <div style="font-size:var(--text-xs);margin-top:3px;" id="strengthLabel"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-control" type="password" placeholder="Confirm new password"/></div>
+              </div>
+            </div>
+            <div class="card-footer"><button class="btn btn-primary" onclick="showToast('success','Password Updated','Your password has been changed successfully.')">Update Password</button></div>
+          </div>
+
+          <!-- Active Sessions -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Active Sessions</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4);background:var(--primary-50);border:1px solid var(--primary-200);border-radius:var(--radius-xl);">
+                  <div style="display:flex;align-items:center;gap:var(--space-3);">
+                    <div style="width:36px;height:36px;background:var(--primary-100);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;color:var(--primary-700);font-size:var(--text-xs);font-weight:700;">🖥</div>
+                    <div><div style="font-size:var(--text-sm);font-weight:var(--fw-semibold);">Current Session</div><div style="font-size:var(--text-xs);color:var(--text-secondary);">Chrome · Mumbai, India · Active now</div></div>
+                  </div>
+                  <span class="badge badge-green">Current</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-xl);">
+                  <div style="display:flex;align-items:center;gap:var(--space-3);">
+                    <div style="width:36px;height:36px;background:var(--neutral-100);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:var(--text-xs);">📱</div>
+                    <div><div style="font-size:var(--text-sm);font-weight:var(--fw-semibold);">Mobile Browser</div><div style="font-size:var(--text-xs);color:var(--text-secondary);">Safari · Mumbai, India · 2 hours ago</div></div>
+                  </div>
+                  <button class="btn btn-outline-danger btn-sm" onclick="showToast('success','Session Ended','Session has been terminated.')">End Session</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Tab -->
+      <div data-panel="settings" data-panel-id="notifications" class="hidden">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Notification Preferences</div></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;border-bottom:1px solid var(--border-default);">
+                <div><div style="font-size:var(--text-sm);font-weight:var(--fw-medium);">Assignment Notifications</div><div style="font-size:var(--text-xs);color:var(--text-tertiary);">Get notified when new assignments are posted</div></div>
+                <label class="toggle-switch"><div class="toggle-track checked"><div class="toggle-thumb"></div></div><input type="checkbox" checked style="display:none;"/></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;border-bottom:1px solid var(--border-default);">
+                <div><div style="font-size:var(--text-sm);font-weight:var(--fw-medium);">Marks Published</div><div style="font-size:var(--text-xs);color:var(--text-tertiary);">Notifications when TA-1/TA-2 marks are published</div></div>
+                <label class="toggle-switch"><div class="toggle-track checked"><div class="toggle-thumb"></div></div><input type="checkbox" checked style="display:none;"/></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;border-bottom:1px solid var(--border-default);">
+                <div><div style="font-size:var(--text-sm);font-weight:var(--fw-medium);">Attendance Alerts</div><div style="font-size:var(--text-xs);color:var(--text-tertiary);">Alert when attendance drops below 80%</div></div>
+                <label class="toggle-switch"><div class="toggle-track checked"><div class="toggle-thumb"></div></div><input type="checkbox" checked style="display:none;"/></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;border-bottom:1px solid var(--border-default);">
+                <div><div style="font-size:var(--text-sm);font-weight:var(--fw-medium);">Announcement Notifications</div><div style="font-size:var(--text-xs);color:var(--text-tertiary);">Get notified of new department announcements</div></div>
+                <label class="toggle-switch"><div class="toggle-track checked"><div class="toggle-thumb"></div></div><input type="checkbox" checked style="display:none;"/></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;">
+                <div><div style="font-size:var(--text-sm);font-weight:var(--fw-medium);">Timetable Changes</div><div style="font-size:var(--text-xs);color:var(--text-tertiary);">Notify when class schedule is modified</div></div>
+                <label class="toggle-switch"><div class="toggle-track"><div class="toggle-thumb"></div></div><input type="checkbox" style="display:none;"/></label>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer"><button class="btn btn-primary" onclick="showToast('success','Preferences Saved','Notification settings updated.')">Save Preferences</button></div>
+        </div>
+      </div>
+
+      <!-- Appearance Tab -->
+      <div data-panel="settings" data-panel-id="appearance" class="hidden">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Appearance</div></div>
+          <div class="card-body">
+            <div class="form-group" style="max-width:300px;">
+              <label class="form-label">Theme</label>
+              <select class="form-control">
+                <option>Light (Default)</option>
+                <option>Dark</option>
+                <option>System</option>
+              </select>
+            </div>
+            <div class="form-group" style="max-width:300px;margin-top:var(--space-4);">
+              <label class="form-label">Language</label>
+              <select class="form-control">
+                <option>English (Default)</option>
+                <option>हिंदी</option>
+                <option>मराठी</option>
+              </select>
+            </div>
+            <div class="form-group" style="max-width:300px;margin-top:var(--space-4);">
+              <label class="form-label">Time Zone</label>
+              <select class="form-control">
+                <option>Asia/Kolkata (IST, UTC+5:30)</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-footer"><button class="btn btn-primary" onclick="showToast('success','Saved','Appearance settings updated.')">Save</button></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/student-sidebar.js"></script>
+</body>
+</html>

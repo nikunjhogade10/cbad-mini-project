@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TA-2 Marks Entry — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Marks</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">TA-2 Entry</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="marks-ta1.html" class="btn btn-secondary btn-sm">← TA-1 Marks</a>
+        <a href="marks-overall.html" class="btn btn-secondary btn-sm">Overall →</a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">TA-2 Marks Entry</h1>
+          <p class="label-text">Enter Internal Assessment 2 marks for students</p>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="form-row" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="form-group">
+              <label class="form-label">Subject <span class="required">*</span></label>
+              <select class="form-control" id="marksSubject">
+                <option value="">Select Subject</option>
+                <option selected>CBAD</option>
+                <option>PE-I</option>
+                <option>DAA</option>
+                <option>CNEL</option>
+                <option>CAPML</option>
+                <option>CBADL</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Division <span class="required">*</span></label>
+              <select class="form-control"><option>Division A</option><option>Division B</option><option>Division C</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max Marks <span class="required">*</span></label>
+              <input class="form-control" type="number" value="20" min="1" id="maxMarks"/>
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;">
+              <button class="btn btn-primary btn-sm btn-block" onclick="showToast('info','Saved','TA-2 marks saved for this subject.')">Save Marks</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-container">
+        <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-default); background: var(--neutral-0); display:flex;justify-content:space-between;align-items:center;">
+          <div class="section-title-sm">CBAD — Division A — TA-2</div>
+          <div style="display:flex;gap:var(--space-2);">
+            <button class="btn btn-ghost btn-sm" onclick="fillMarks()">Auto-fill Sample</button>
+            <button class="btn btn-ghost btn-sm" onclick="clearMarks()">Clear All</button>
+          </div>
+        </div>
+        <table class="data-table" id="marksTable">
+          <thead>
+            <tr><th>Roll No.</th><th>Student ID</th><th>Student Name</th><th>Max Marks</th><th>Marks Obtained</th><th>Percentage</th><th>Grade</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CS-A-101</td><td style="font-size:var(--text-xs);font-family:monospace;">MIT2026CS101</td><td style="font-weight:var(--fw-medium);">Nikunj Hogade</td><td>20</td><td><input class="form-control" type="number" min="0" max="20" value="18" style="width:80px;" oninput="updateGrade(this)"/></td><td class="pct-cell" style="font-weight:600;color:var(--success-600);">90%</td><td class="grade-cell"><span class="badge badge-green">A+</span></td></tr>
+            <tr><td>CS-A-102</td><td style="font-size:var(--text-xs);font-family:monospace;">MIT2026CS102</td><td style="font-weight:var(--fw-medium);">Aditya Sharma</td><td>20</td><td><input class="form-control" type="number" min="0" max="20" value="15" style="width:80px;" oninput="updateGrade(this)"/></td><td class="pct-cell" style="font-weight:600;color:var(--primary-700);">75%</td><td class="grade-cell"><span class="badge badge-blue">B+</span></td></tr>
+            <tr><td>CS-A-103</td><td style="font-size:var(--text-xs);font-family:monospace;">MIT2026CS103</td><td style="font-weight:var(--fw-medium);">Priya Mehta</td><td>20</td><td><input class="form-control" type="number" min="0" max="20" value="20" style="width:80px;" oninput="updateGrade(this)"/></td><td class="pct-cell" style="font-weight:600;color:var(--success-600);">100%</td><td class="grade-cell"><span class="badge badge-green">A+</span></td></tr>
+            <tr><td>CS-A-104</td><td style="font-size:var(--text-xs);font-family:monospace;">MIT2026CS104</td><td style="font-weight:var(--fw-medium);">Rahul Verma</td><td>20</td><td><input class="form-control" type="number" min="0" max="20" value="" style="width:80px;" placeholder="–" oninput="updateGrade(this)"/></td><td class="pct-cell" style="color:var(--text-tertiary);">—</td><td class="grade-cell">—</td></tr>
+            <tr><td>CS-A-105</td><td style="font-size:var(--text-xs);font-family:monospace;">MIT2026CS105</td><td style="font-weight:var(--fw-medium);">Sneha Patil</td><td>20</td><td><input class="form-control" type="number" min="0" max="20" value="16" style="width:80px;" oninput="updateGrade(this)"/></td><td class="pct-cell" style="font-weight:600;color:var(--primary-700);">80%</td><td class="grade-cell"><span class="badge badge-green">A</span></td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:var(--neutral-50);">
+              <td colspan="4" style="font-weight:600;padding:0.75rem var(--space-4);">Class Average</td>
+              <td style="font-weight:700;color:var(--primary-700);padding:0.75rem var(--space-4);">17/20</td>
+              <td style="font-weight:700;color:var(--primary-700);padding:0.75rem var(--space-4);">86%</td>
+              <td style="padding:0.75rem var(--space-4);"><span class="badge badge-green">A</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:var(--space-3);margin-top:var(--space-4);">
+        <button class="btn btn-secondary">Save as Draft</button>
+        <button class="btn btn-primary" onclick="openModal('publishModal')">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+          Publish Marks
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="modal-overlay" id="publishModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-body" style="text-align:center;padding:var(--space-8) var(--space-6);">
+      <div class="confirm-dialog-icon info"><svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6"/></svg></div>
+      <h3 style="font-size:var(--text-lg);font-weight:var(--fw-semibold);margin-bottom:var(--space-2);">Publish TA-2 Marks?</h3>
+      <p style="font-size:var(--text-sm);color:var(--text-secondary);">Once published, students will be able to view their TA-2 marks. Students will be notified automatically.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('publishModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('publishModal');showToast('success','Marks Published','TA-2 marks have been published successfully.')">Confirm Publish</button>
+    </div>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+const grades = { 91: 'A+', 81: 'A', 71: 'B+', 61: 'B', 51: 'C', 0: 'D' };
+function getGradeLabel(pct) { for (const [t,g] of Object.entries(grades).sort((a,b)=>b[0]-a[0])) { if (pct >= parseInt(t)) return g; } return 'D'; }
+function getBadge(g) { const cls = {'A+':'green','A':'green','B+':'blue','B':'blue','C':'amber','D':'red'}[g]||'gray'; return `<span class="badge badge-${cls}">${g}</span>`; }
+function updateGrade(input) {
+  const row = input.closest('tr'); const max = parseInt(document.getElementById('maxMarks').value)||20;
+  const val = parseInt(input.value); const pct = isNaN(val) ? null : Math.round(val/max*100);
+  const pctCell = row.querySelector('.pct-cell'); const gradeCell = row.querySelector('.grade-cell');
+  if (pct !== null) {
+    const color = pct>=90?'var(--success-600)':pct>=70?'var(--primary-700)':pct>=50?'var(--warning-600)':'var(--error-600)';
+    pctCell.innerHTML = `<span style="font-weight:600;color:${color};">${pct}%</span>`;
+    gradeCell.innerHTML = getBadge(getGradeLabel(pct));
+  } else { pctCell.textContent='—'; gradeCell.textContent='—'; }
+}
+function fillMarks() { const vals=[18,15,20,13,16]; document.querySelectorAll('#marksTable tbody tr').forEach((r,i)=>{ const inp=r.querySelector('input'); inp.value=vals[i]; updateGrade(inp); }); }
+function clearMarks() { document.querySelectorAll('#marksTable tbody input').forEach(i=>{ i.value=''; updateGrade(i); }); }
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mark Attendance — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+  <style>
+    .att-btn {
+      width: 32px; height: 32px; border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-default);
+      background: var(--neutral-0);
+      cursor: pointer;
+      font-size: 12px; font-weight: 600;
+      transition: all var(--transition-base);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .att-btn.present { background: var(--success-500); border-color: var(--success-600); color: white; }
+    .att-btn.absent  { background: var(--error-500);   border-color: var(--error-600);   color: white; }
+    .att-btn.leave   { background: var(--warning-500); border-color: var(--warning-600); color: white; }
+    .att-btn:hover   { transform: scale(1.1); box-shadow: var(--shadow-sm); }
+    .att-count { font-size: 11px; font-weight: 600; color: var(--text-tertiary); }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Attendance</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Mark Attendance</span></nav>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Mark Attendance</h1>
+          <p class="label-text">Daily attendance marking for classes</p>
+        </div>
+      </div>
+
+      <!-- Session Selection -->
+      <div class="card mb-4">
+        <div class="card-header"><div class="card-title">Session Details</div></div>
+        <div class="card-body">
+          <div class="form-row" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="form-group">
+              <label class="form-label">Date <span class="required">*</span></label>
+              <input class="form-control" type="date" id="attDate" value="2026-09-01"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subject <span class="required">*</span></label>
+              <select class="form-control" id="attSubject">
+                <option value="">Select Subject</option>
+                <option value="CBAD">CBAD</option>
+                <option value="PE-I">PE-I</option>
+                <option value="DAA">DAA</option>
+                <option value="CNEL">CNEL Network Engineering Lab (CNEL)</option>
+                <option value="CAPCAPML">CNEL Application Programming Models Lab (CAPCAPML)</option>
+                <option value="CBADL">Container Based Application Development Lab (CBADL)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Division <span class="required">*</span></label>
+              <select class="form-control" id="attDiv">
+                <option value="">Select Division</option>
+                <option>A</option><option>B</option><option>C</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Period</label>
+              <select class="form-control">
+                <option>9:00 AM – 10:00 AM</option>
+                <option>10:00 AM – 11:00 AM</option>
+                <option>11:00 AM – 12:00 PM</option>
+                <option>12:00 PM – 1:00 PM</option>
+                <option>2:00 PM – 3:00 PM</option>
+                <option>3:00 PM – 4:00 PM</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-2);">
+            <button class="btn btn-primary btn-sm" onclick="loadStudents()">Load Students</button>
+            <button class="btn btn-ghost btn-sm" onclick="markAll('present')">Mark All Present</button>
+            <button class="btn btn-ghost btn-sm" onclick="markAll('absent')">Mark All Absent</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Bar -->
+      <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4);flex-wrap:wrap;">
+        <div style="background:var(--success-50);border:1px solid var(--success-200);border-radius:var(--radius-xl);padding:var(--space-3) var(--space-4);display:flex;align-items:center;gap:var(--space-2);">
+          <span class="att-btn present" style="cursor:default;">P</span>
+          <div><div style="font-size:var(--text-xl);font-weight:var(--fw-bold);color:var(--success-700);" id="countPresent">0</div><div style="font-size:var(--text-xs);color:var(--success-600);">Present</div></div>
+        </div>
+        <div style="background:var(--error-50);border:1px solid var(--error-200);border-radius:var(--radius-xl);padding:var(--space-3) var(--space-4);display:flex;align-items:center;gap:var(--space-2);">
+          <span class="att-btn absent" style="cursor:default;">A</span>
+          <div><div style="font-size:var(--text-xl);font-weight:var(--fw-bold);color:var(--error-700);" id="countAbsent">0</div><div style="font-size:var(--text-xs);color:var(--error-600);">Absent</div></div>
+        </div>
+        <div style="background:var(--warning-50);border:1px solid var(--warning-200);border-radius:var(--radius-xl);padding:var(--space-3) var(--space-4);display:flex;align-items:center;gap:var(--space-2);">
+          <span class="att-btn leave" style="cursor:default;">L</span>
+          <div><div style="font-size:var(--text-xl);font-weight:var(--fw-bold);color:var(--warning-700);" id="countLeave">0</div><div style="font-size:var(--text-xs);color:var(--warning-600);">Leave</div></div>
+        </div>
+        <div style="background:var(--neutral-50);border:1px solid var(--border-default);border-radius:var(--radius-xl);padding:var(--space-3) var(--space-4);">
+          <div style="font-size:var(--text-xl);font-weight:var(--fw-bold);" id="countTotal">5</div>
+          <div style="font-size:var(--text-xs);color:var(--text-tertiary);">Total Students</div>
+        </div>
+      </div>
+
+      <!-- Attendance Table -->
+      <div class="table-container" id="attTable">
+        <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-default); background: var(--neutral-0); display:flex;justify-content:space-between;align-items:center;">
+          <div class="section-title-sm">Student Attendance List — Division A</div>
+          <div style="font-size:var(--text-xs);color:var(--text-tertiary);">Click P/A/L to mark attendance</div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Roll No</th><th>Student ID</th><th>Student Name</th><th>Previous Att. %</th><th>Mark Attendance</th></tr>
+          </thead>
+          <tbody id="attBody">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:var(--space-3);margin-top:var(--space-4);">
+        <button class="btn btn-secondary" onclick="clearMarking()">Clear</button>
+        <button class="btn btn-primary" onclick="saveAttendance()">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+          Save Attendance
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+const students = [
+  {roll:'CS-A-101', id:'MIT2026CS101', name:'Nikunj Hogade',  att:86, initials:'NH'},
+  {roll:'CS-A-102', id:'MIT2026CS102', name:'Aditya Sharma',  att:72, initials:'AS'},
+  {roll:'CS-A-103', id:'MIT2026CS103', name:'Priya Mehta',    att:91, initials:'PM'},
+  {roll:'CS-A-104', id:'MIT2026CS104', name:'Rahul Verma',    att:58, initials:'RV'},
+  {roll:'CS-A-105', id:'MIT2026CS105', name:'Sneha Patil',    att:94, initials:'SP'},
+];
+
+function loadStudents() {
+  const tbody = document.getElementById('attBody');
+  tbody.innerHTCAPML = '';
+  students.forEach(s => {
+    const tr = document.createElement('tr');
+    tr.dataset.status = 'none';
+    const attColor = s.att < 75 ? 'var(--error-600)' : s.att < 80 ? 'var(--warning-600)' : 'var(--success-600)';
+    tr.innerHTCAPML = `
+      <td style="font-weight:600;">${s.roll}</td>
+      <td style="font-size:var(--text-xs);font-family:monospace;">${s.id}</td>
+      <td><div style="display:flex;align-items:center;gap:var(--space-2);">
+        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;font-size:11px;">${s.initials}</div>
+        <span style="font-weight:var(--fw-medium);">${s.name}</span>
+      </div></td>
+      <td><span style="font-weight:600;color:${attColor};">${s.att}%</span></td>
+      <td>
+        <div style="display:flex;gap:var(--space-2);">
+          <button class="att-btn" onclick="markStudent(this,'present','${s.id}')">P</button>
+          <button class="att-btn" onclick="markStudent(this,'absent','${s.id}')">A</button>
+          <button class="att-btn" onclick="markStudent(this,'leave','${s.id}')">L</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateCounts();
+  showToast('info','Students Loaded','5 students loaded for Division A.');
+}
+
+function markStudent(btn, status, id) {
+  const row = btn.closest('tr');
+  row.querySelectorAll('.att-btn').forEach(b => { b.classList.remove('present','absent','leave'); });
+  btn.classList.add(status);
+  row.dataset.status = status;
+  updateCounts();
+}
+
+function markAll(status) {
+  document.querySelectorAll('#attBody tr').forEach(row => {
+    row.querySelectorAll('.att-btn').forEach(b => b.classList.remove('present','absent','leave'));
+    const btn = row.querySelector(`.att-btn:nth-child(${status==='present'?1:2})`);
+    if (btn) btn.classList.add(status);
+    row.dataset.status = status;
+  });
+  updateCounts();
+}
+
+function updateCounts() {
+  let p=0, a=0, l=0;
+  document.querySelectorAll('#attBody tr').forEach(row => {
+    if (row.dataset.status === 'present') p++;
+    else if (row.dataset.status === 'absent') a++;
+    else if (row.dataset.status === 'leave') l++;
+  });
+  document.getElementById('countPresent').textContent = p;
+  document.getElementById('countAbsent').textContent = a;
+  document.getElementById('countLeave').textContent = l;
+}
+
+function clearMarking() {
+  document.querySelectorAll('#attBody .att-btn').forEach(b => b.classList.remove('present','absent','leave'));
+  document.querySelectorAll('#attBody tr').forEach(r => r.dataset.status = 'none');
+  updateCounts();
+}
+
+function saveAttendance() {
+  showToast('success','Attendance Saved','Attendance has been recorded successfully.');
+}
+
+document.addEventListener('DOMContentLoaded', loadStudents);
+</script>
+</body>
+</html>

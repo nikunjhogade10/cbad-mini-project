@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Student — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item"><a href="students.html">Students</a></span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Add Student</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="students.html" class="btn btn-secondary btn-sm">← Back to Students</a>
+      </div>
+    </header>
+
+    <main class="page-body" style="max-width:900px;">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Add New Student</h1>
+          <p class="label-text">Fill in the student's academic and personal information</p>
+        </div>
+      </div>
+
+      <form id="addStudentForm" onsubmit="handleSubmit(event)">
+        <!-- Personal Information -->
+        <div class="card mb-4">
+          <div class="card-header"><div class="card-title">Personal Information</div></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="firstName">First Name <span class="required">*</span></label>
+                <input id="firstName" class="form-control" placeholder="Enter first name" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lastName">Last Name <span class="required">*</span></label>
+                <input id="lastName" class="form-control" placeholder="Enter last name" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="dob">Date of Birth <span class="required">*</span></label>
+                <input id="dob" class="form-control" type="date" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="gender">Gender <span class="required">*</span></label>
+                <select id="gender" class="form-control" required>
+                  <option value="">Select gender</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
+                <input id="phone" class="form-control" placeholder="+91 XXXXX XXXXX" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+                <input id="email" class="form-control" type="email" placeholder="student@mit.edu.in" required/>
+                <div class="form-hint">Will be used as login email</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Information -->
+        <div class="card mb-4">
+          <div class="card-header"><div class="card-title">Academic Information</div></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="studentId">Student ID <span class="required">*</span></label>
+                <div style="display:flex;gap:var(--space-2);">
+                  <input id="studentId" class="form-control" placeholder="MIT2026CS..." required/>
+                  <button type="button" class="btn btn-secondary btn-sm" style="white-space:nowrap;" onclick="generateId()">Auto Generate</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="dept">Department <span class="required">*</span></label>
+                <select id="dept" class="form-control" required>
+                  <option value="">Select department</option>
+                  <option>Computer Science &amp; Engineering</option>
+                  <option>Electronics &amp; Telecommunication</option>
+                  <option>Information Technology</option>
+                  <option>Mechanical Engineering</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="program">Program <span class="required">*</span></label>
+                <select id="program" class="form-control" required>
+                  <option value="">Select program</option>
+                  <option>B.Tech</option>
+                  <option>M.Tech</option>
+                  <option>BCA</option>
+                  <option>MCA</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="semester">Current Semester <span class="required">*</span></label>
+                <select id="semester" class="form-control" required>
+                  <option value="">Select semester</option>
+                  <option>I</option><option>II</option><option>III</option><option>IV</option>
+                  <option>V</option><option>VI</option><option>VII</option><option>VIII</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="division">Division <span class="required">*</span></label>
+                <select id="division" class="form-control" required>
+                  <option value="">Select division</option>
+                  <option>A</option><option>B</option><option>C</option><option>D</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="rollNo">Roll Number <span class="required">*</span></label>
+                <input id="rollNo" class="form-control" placeholder="e.g. CS-A-101" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="admissionYear">Admission Year <span class="required">*</span></label>
+                <select id="admissionYear" class="form-control" required>
+                  <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guardian Info -->
+        <div class="card mb-4">
+          <div class="card-header"><div class="card-title">Guardian Information</div></div>
+          <div class="card-body">
+            <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+              <div class="form-group"><label class="form-label" for="guardianName">Guardian Name</label><input id="guardianName" class="form-control" placeholder="Parent/Guardian full name"/></div>
+              <div class="form-group"><label class="form-label" for="guardianPhone">Guardian Phone</label><input id="guardianPhone" class="form-control" placeholder="+91 XXXXX XXXXX"/></div>
+              <div class="form-group"><label class="form-label" for="guardianEmail">Guardian Email</label><input id="guardianEmail" class="form-control" type="email" placeholder="guardian@email.com"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Credentials -->
+        <div class="card mb-6">
+          <div class="card-header"><div class="card-title">Account Credentials</div></div>
+          <div class="card-body">
+            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+              <div class="form-group">
+                <label class="form-label" for="initPassword">Initial Password <span class="required">*</span></label>
+                <input id="initPassword" class="form-control" type="password" placeholder="Set initial password"/>
+                <div class="strength-bar-wrap" id="strengthBar"><div class="strength-bar-segment"></div><div class="strength-bar-segment"></div><div class="strength-bar-segment"></div><div class="strength-bar-segment"></div></div>
+                <div style="font-size:var(--text-xs);margin-top:3px;" id="strengthLabel"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                <input id="confirmPassword" class="form-control" type="password" placeholder="Confirm password"/>
+              </div>
+            </div>
+            <div class="alert alert-info" style="margin-top: var(--space-2);">
+              <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>The student will be prompted to change their password on first login.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;justify-content:flex-end;gap:var(--space-3);">
+          <a href="students.html" class="btn btn-secondary">Cancel</a>
+          <button type="reset" class="btn btn-ghost">Clear Form</button>
+          <button type="submit" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Add Student
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+function generateId() {
+  const id = 'MIT2026CS' + String(Math.floor(100 + Math.random() * 900));
+  document.getElementById('studentId').value = id;
+}
+function handleSubmit(e) {
+  e.preventDefault();
+  showToast('success', 'Student Added', 'New student has been registered successfully.');
+  setTimeout(() => window.location.href = 'students.html', 1500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Subject — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Subjects</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Add Subject</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="subjects.html" class="btn btn-secondary btn-sm">← All Subjects</a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Add New Subject</h1>
+          <p class="label-text">Register a new subject into the system</p>
+        </div>
+      </div>
+
+      <div class="card" style="max-width: 680px;">
+        <div class="card-header"><div class="card-title">Subject Details</div></div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Subject Name <span class="required">*</span></label>
+              <input class="form-control" type="text" id="subjectName" placeholder="e.g. Container Based Application Development"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subject Code <span class="required">*</span></label>
+              <input class="form-control" type="text" id="subjectCode" placeholder="e.g. CBAD" style="text-transform:uppercase;"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Faculty Name <span class="required">*</span></label>
+              <input class="form-control" type="text" id="facultyName" placeholder="e.g. Prof. Tushar Mane"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Credits <span class="required">*</span></label>
+              <select class="form-control" id="credits">
+                <option value="1">1 Credit</option>
+                <option value="2">2 Credits</option>
+                <option value="3">3 Credits</option>
+                <option value="4" selected>4 Credits</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Subject Type</label>
+              <select class="form-control" id="subjectType">
+                <option>Theory</option>
+                <option>Lab</option>
+                <option>Skill</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max Marks (TA)</label>
+              <input class="form-control" type="number" id="maxMarks" value="20" min="1" max="100"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit Coverage</label>
+            <textarea class="form-control" rows="3" placeholder="Briefly describe unit topics covered in this subject…" style="resize:vertical;"></textarea>
+          </div>
+
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);">
+            <button class="btn btn-primary" onclick="addSubject()">Add Subject</button>
+            <a href="subjects.html" class="btn btn-secondary">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+function addSubject() {
+  const name = document.getElementById('subjectName').value.trim();
+  const code = document.getElementById('subjectCode').value.trim();
+  const faculty = document.getElementById('facultyName').value.trim();
+  if (!name || !code || !faculty) {
+    showToast('error', 'Validation Error', 'Please fill all required fields.');
+    return;
+  }
+  showToast('success', 'Subject Added', `${name} (${code.toUpperCase()}) has been added successfully.`);
+  setTimeout(() => window.location.href = 'subjects.html', 1800);
+}
+</script>
+</body>
+</html>

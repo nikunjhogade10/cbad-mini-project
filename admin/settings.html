@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Account</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Settings</span></nav>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Admin Settings</h1>
+          <p class="label-text">Manage your account, preferences, and system configuration</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:var(--space-6);align-items:start;">
+        <!-- Sidebar Tabs -->
+        <div class="card">
+          <div class="card-body" style="padding:var(--space-3);">
+            <nav style="display:flex;flex-direction:column;gap:2px;">
+              <a class="nav-item active" href="javascript:void(0)" onclick="showTab('profile')">Profile</a>
+              <a class="nav-item" href="javascript:void(0)" onclick="showTab('security')">Security</a>
+              <a class="nav-item" href="javascript:void(0)" onclick="showTab('notifications')">Notifications</a>
+              <a class="nav-item" href="javascript:void(0)" onclick="showTab('system')">System Config</a>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <!-- Profile Tab -->
+          <div id="tab-profile" class="card">
+            <div class="card-header"><div class="card-title">Profile Information</div></div>
+            <div class="card-body">
+              <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5);">
+                <div class="avatar" style="width:64px;height:64px;font-size:24px;background:linear-gradient(135deg,#dc2626,#7c3aed);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">AD</div>
+                <div>
+                  <div style="font-weight:var(--fw-semibold);">Admin User</div>
+                  <div style="font-size:var(--text-sm);color:var(--text-secondary);">MIT.Admin · CSE Department</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" type="text" value="Admin User"/></div>
+                <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" value="admin@mit.edu.in"/></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Department</label><input class="form-control" type="text" value="Computer Science and Engineering"/></div>
+                <div class="form-group"><label class="form-label">Role</label><input class="form-control" type="text" value="System Administrator" readonly/></div>
+              </div>
+              <button class="btn btn-primary" onclick="showToast('success','Profile Updated','Your profile information has been saved.')">Save Profile</button>
+            </div>
+          </div>
+
+          <!-- Security Tab -->
+          <div id="tab-security" class="card" style="display:none;">
+            <div class="card-header"><div class="card-title">Change Password</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">Current Password</label><input class="form-control" type="password" placeholder="Enter current password"/></div>
+              <div class="form-group"><label class="form-label">New Password</label><input class="form-control" type="password" placeholder="Enter new password"/></div>
+              <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-control" type="password" placeholder="Confirm new password"/></div>
+              <button class="btn btn-primary" onclick="showToast('success','Password Updated','Your password has been changed.')">Update Password</button>
+            </div>
+          </div>
+
+          <!-- Notifications Tab -->
+          <div id="tab-notifications" class="card" style="display:none;">
+            <div class="card-header"><div class="card-title">Notification Preferences</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);border-radius:var(--radius-lg);border:1px solid var(--border-default);">
+                  <div><div style="font-weight:var(--fw-medium);">Assignment Submissions</div><div style="font-size:var(--text-xs);color:var(--text-secondary);">Get notified when a student submits an assignment</div></div>
+                  <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-track checked"></span></label>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);border-radius:var(--radius-lg);border:1px solid var(--border-default);">
+                  <div><div style="font-weight:var(--fw-medium);">Attendance Alerts</div><div style="font-size:var(--text-xs);color:var(--text-secondary);">Notify when student attendance drops below 75%</div></div>
+                  <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-track checked"></span></label>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);border-radius:var(--radius-lg);border:1px solid var(--border-default);">
+                  <div><div style="font-weight:var(--fw-medium);">System Health Alerts</div><div style="font-size:var(--text-xs);color:var(--text-secondary);">Alert when a container service goes down</div></div>
+                  <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-track checked"></span></label>
+                </div>
+              </div>
+              <button class="btn btn-primary" style="margin-top:var(--space-4);" onclick="showToast('success','Saved','Notification preferences updated.')">Save Preferences</button>
+            </div>
+          </div>
+
+          <!-- System Config Tab -->
+          <div id="tab-system" class="card" style="display:none;">
+            <div class="card-header"><div class="card-title">System Configuration</div></div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Academic Year</label><input class="form-control" type="text" value="2026-27"/></div>
+                <div class="form-group"><label class="form-label">Current Semester</label><select class="form-control"><option>Semester V</option><option>Semester VI</option></select></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Department</label><input class="form-control" type="text" value="Computer Science and Engineering"/></div>
+                <div class="form-group"><label class="form-label">Attendance Threshold (%)</label><input class="form-control" type="number" value="75" min="0" max="100"/></div>
+              </div>
+              <button class="btn btn-primary" onclick="showToast('success','Config Saved','System configuration updated.')">Save Configuration</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+function showTab(id) {
+  ['profile','security','notifications','system'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === id ? '' : 'none';
+  });
+  document.querySelectorAll('.sidebar .nav-item, main .nav-item').forEach((el,i) => {
+    const tabs = ['profile','security','notifications','system'];
+    el.classList.toggle('active', tabs[i] === id);
+  });
+}
+</script>
+</body>
+</html>

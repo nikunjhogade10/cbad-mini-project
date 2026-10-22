@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Overall Marks — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Marks</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Overall Summary</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="marks-ta1.html" class="btn btn-secondary btn-sm">← TA-1</a>
+        <a href="marks-ta2.html" class="btn btn-secondary btn-sm">TA-2</a>
+        <button class="btn btn-primary btn-sm" onclick="showToast('success','Report Exported','Overall marks report exported successfully.')">Export PDF</button>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Overall Marks Summary</h1>
+          <p class="label-text">Combined TA-1 + TA-2 performance for all subjects — Division A</p>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="stats-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom: var(--space-6);">
+        <div class="stat-card"><div class="stat-card-label">Class Average</div><div class="stat-card-value" style="color:var(--success-600);">87%</div></div>
+        <div class="stat-card"><div class="stat-card-label">Top Performer</div><div class="stat-card-value" style="font-size:var(--text-base);">Priya Mehta</div></div>
+        <div class="stat-card"><div class="stat-card-label">Students Passed</div><div class="stat-card-value">4 <span style="font-size:var(--text-sm);color:var(--text-secondary);">/ 5</span></div></div>
+        <div class="stat-card"><div class="stat-card-label">Pending Marks</div><div class="stat-card-value" style="color:var(--warning-600);">1</div></div>
+      </div>
+
+      <!-- Chart -->
+      <div class="card mb-5">
+        <div class="card-header"><div class="card-title">Subject-wise Average — TA-1 vs TA-2</div></div>
+        <div class="card-body">
+          <canvas id="marksChart" height="100"></canvas>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-container">
+        <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-default);">
+          <div class="section-title-sm">Student-wise Overall Performance</div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Roll No.</th><th>Student</th><th>TA-1 Avg</th><th>TA-2 Avg</th><th>Combined</th><th>Grade</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CS-A-101</td><td style="font-weight:var(--fw-medium);">Nikunj Hogade</td>
+              <td><span style="color:var(--success-600);font-weight:600;">17.1/20</span></td>
+              <td><span style="color:var(--success-600);font-weight:600;">17.4/20</span></td>
+              <td><span style="color:var(--success-600);font-weight:700;">86%</span></td>
+              <td><span class="badge badge-green">A</span></td>
+              <td><span class="badge badge-green">Pass</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-102</td><td style="font-weight:var(--fw-medium);">Aditya Sharma</td>
+              <td><span style="color:var(--primary-700);font-weight:600;">14.0/20</span></td>
+              <td><span style="color:var(--primary-700);font-weight:600;">15.2/20</span></td>
+              <td><span style="color:var(--primary-700);font-weight:700;">73%</span></td>
+              <td><span class="badge badge-blue">B+</span></td>
+              <td><span class="badge badge-green">Pass</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-103</td><td style="font-weight:var(--fw-medium);">Priya Mehta</td>
+              <td><span style="color:var(--success-600);font-weight:600;">19.2/20</span></td>
+              <td><span style="color:var(--success-600);font-weight:600;">19.8/20</span></td>
+              <td><span style="color:var(--success-600);font-weight:700;">98%</span></td>
+              <td><span class="badge badge-green">A+</span></td>
+              <td><span class="badge badge-green">Pass</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-104</td><td style="font-weight:var(--fw-medium);">Rahul Verma</td>
+              <td><span style="color:var(--text-tertiary);font-weight:600;">—</span></td>
+              <td><span style="color:var(--text-tertiary);font-weight:600;">—</span></td>
+              <td><span style="color:var(--warning-600);font-weight:700;">Pending</span></td>
+              <td>—</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-105</td><td style="font-weight:var(--fw-medium);">Sneha Patil</td>
+              <td><span style="color:var(--success-600);font-weight:600;">16.8/20</span></td>
+              <td><span style="color:var(--success-600);font-weight:600;">16.0/20</span></td>
+              <td><span style="color:var(--success-600);font-weight:700;">82%</span></td>
+              <td><span class="badge badge-green">A</span></td>
+              <td><span class="badge badge-green">Pass</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+const ctx = document.getElementById('marksChart');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['DAA','CBAD','PE-I','CNEL','CAPML','CBADL','SCIL','SHD'],
+    datasets: [
+      { label: 'TA-1 Avg', data: [18,19,16,17,16,18,15,18], backgroundColor: 'rgba(37,99,235,0.7)', borderRadius: 4 },
+      { label: 'TA-2 Avg', data: [17,18,15,16,17,17,16,19], backgroundColor: 'rgba(34,197,94,0.7)', borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, plugins: { legend: { position: 'top' } },
+    scales: { y: { min: 0, max: 20, ticks: { stepSize: 5 } } }
+  }
+});
+</script>
+</body>
+</html>

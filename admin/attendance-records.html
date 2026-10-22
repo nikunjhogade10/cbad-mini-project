@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Records — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Attendance</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Records</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="attendance-mark.html" class="btn btn-primary btn-sm">Mark Attendance</a>
+        <a href="attendance-reports.html" class="btn btn-secondary btn-sm">Reports →</a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Attendance Records</h1>
+          <p class="label-text">View student-wise attendance records by subject</p>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="form-row" style="grid-template-columns: repeat(3,1fr);">
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <select class="form-control">
+                <option>All Subjects</option>
+                <option>Container Based Application Development</option>
+                <option>Design and Analysis of Algorithm</option>
+                <option>Program Elective - I</option>
+                <option>Cloud Network Engineering Lab</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Division</label>
+              <select class="form-control"><option>Division A</option><option>Division B</option></select>
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;">
+              <button class="btn btn-primary btn-sm btn-block" onclick="showToast('info','Filtered','Records filtered.')">Apply Filter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-default);">
+          <div class="section-title-sm">Division A — All Subjects</div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Roll No.</th><th>Student</th><th>CBAD</th><th>DAA</th><th>PE-I</th><th>CNEL</th><th>CAPML</th><th>CBADL</th><th>Overall %</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CS-A-101</td><td style="font-weight:var(--fw-medium);">Nikunj Hogade</td>
+              <td>18/20</td><td>16/20</td><td>17/20</td><td>19/20</td><td>17/20</td><td>16/20</td>
+              <td><span style="font-weight:600;color:var(--success-600);">86%</span></td>
+              <td><span class="badge badge-green">Good</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-102</td><td style="font-weight:var(--fw-medium);">Aditya Sharma</td>
+              <td>15/20</td><td>18/20</td><td>14/20</td><td>17/20</td><td>15/20</td><td>18/20</td>
+              <td><span style="font-weight:600;color:var(--success-600);">81%</span></td>
+              <td><span class="badge badge-green">Good</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-103</td><td style="font-weight:var(--fw-medium);">Priya Mehta</td>
+              <td>20/20</td><td>19/20</td><td>20/20</td><td>20/20</td><td>19/20</td><td>20/20</td>
+              <td><span style="font-weight:600;color:var(--success-600);">98%</span></td>
+              <td><span class="badge badge-green">Excellent</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-104</td><td style="font-weight:var(--fw-medium);">Rahul Verma</td>
+              <td>12/20</td><td>11/20</td><td>10/20</td><td>14/20</td><td>12/20</td><td>11/20</td>
+              <td><span style="font-weight:600;color:var(--error-600);">60%</span></td>
+              <td><span class="badge badge-red">Critical</span></td>
+            </tr>
+            <tr>
+              <td>CS-A-105</td><td style="font-weight:var(--fw-medium);">Sneha Patil</td>
+              <td>17/20</td><td>16/20</td><td>18/20</td><td>17/20</td><td>16/20</td><td>17/20</td>
+              <td><span style="font-weight:600;color:var(--success-600);">85%</span></td>
+              <td><span class="badge badge-green">Good</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+</body>
+</html>

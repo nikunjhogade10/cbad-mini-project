@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subjects — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Student Management</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">Subjects</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="add-subject.html" class="btn btn-primary btn-sm">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          Add Subject
+        </a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Subjects</h1>
+          <p class="label-text">Manage all subjects for Semester V — CSE Division A</p>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom: var(--space-6);">
+        <div class="stat-card">
+          <div class="stat-card-label">Total Subjects</div>
+          <div class="stat-card-value">8</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Total Credits</div>
+          <div class="stat-card-value">19</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Theory Subjects</div>
+          <div class="stat-card-value">3</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Lab Subjects</div>
+          <div class="stat-card-value">5</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-default); display:flex; justify-content:space-between; align-items:center;">
+          <div class="section-title-sm">All Subjects — Sem V</div>
+          <input class="form-control" type="text" id="subjectSearch" placeholder="Search subjects…" style="max-width:260px;" oninput="filterSubjects(this.value)"/>
+        </div>
+        <table class="data-table" id="subjectTable">
+          <thead>
+            <tr><th>#</th><th>Subject Name</th><th>Code</th><th>Faculty</th><th>Credits</th><th>TA-1 (Max 20)</th><th>TA-2 (Max 20)</th><th>Type</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td style="font-weight:var(--fw-medium);">Design and Analysis of Algorithm</td><td><span class="badge badge-blue">DAA</span></td><td>Prof. Savitri Chougule</td><td>4</td><td><span style="font-weight:600;color:var(--success-600);">18/20</span></td><td><span style="font-weight:600;color:var(--success-600);">17/20</span></td><td><span class="badge badge-purple" style="background:var(--secondary-100);color:var(--secondary-700);">Theory</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>2</td><td style="font-weight:var(--fw-medium);">Container Based Application Development</td><td><span class="badge badge-green">CBAD</span></td><td>Prof. Tushar Mane</td><td>4</td><td><span style="font-weight:600;color:var(--success-600);">19/20</span></td><td><span style="font-weight:600;color:var(--success-600);">18/20</span></td><td><span class="badge badge-purple" style="background:var(--secondary-100);color:var(--secondary-700);">Theory</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>3</td><td style="font-weight:var(--fw-medium);">Program Elective - I</td><td><span class="badge badge-amber">PE-I</span></td><td>Prof. Deepa Mishra</td><td>3</td><td><span style="font-weight:600;color:var(--primary-700);">16/20</span></td><td><span style="font-weight:600;color:var(--primary-700);">15/20</span></td><td><span class="badge badge-purple" style="background:var(--secondary-100);color:var(--secondary-700);">Theory</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>4</td><td style="font-weight:var(--fw-medium);">Cloud Network Engineering Lab</td><td><span class="badge badge-blue">CNEL</span></td><td>Prof. Sushant Shirbhate</td><td>2</td><td><span style="font-weight:600;color:var(--success-600);">17/20</span></td><td><span style="font-weight:600;color:var(--success-600);">16/20</span></td><td><span class="badge badge-green" style="background:var(--success-100);color:var(--success-700);">Lab</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>5</td><td style="font-weight:var(--fw-medium);">Cloud Application Programming Models Lab</td><td><span class="badge badge-blue">CAPML</span></td><td>Prof. Namrata Naikwade</td><td>2</td><td><span style="font-weight:600;color:var(--primary-700);">16/20</span></td><td><span style="font-weight:600;color:var(--success-600);">17/20</span></td><td><span class="badge badge-green" style="background:var(--success-100);color:var(--success-700);">Lab</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>6</td><td style="font-weight:var(--fw-medium);">Container Based Application Development Lab</td><td><span class="badge badge-green">CBADL</span></td><td>Prof. Tushar Mane</td><td>2</td><td><span style="font-weight:600;color:var(--success-600);">18/20</span></td><td><span style="font-weight:600;color:var(--success-600);">17/20</span></td><td><span class="badge badge-green" style="background:var(--success-100);color:var(--success-700);">Lab</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>7</td><td style="font-weight:var(--fw-medium);">Aptitude &amp; Professional Skills Core</td><td><span class="badge">SCIL</span></td><td>Trainer</td><td>1</td><td><span style="font-weight:600;color:var(--warning-600);">15/20</span></td><td><span style="font-weight:600;color:var(--primary-700);">16/20</span></td><td><span class="badge" style="background:var(--neutral-100);color:var(--text-secondary);">Skill</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+            <tr><td>8</td><td style="font-weight:var(--fw-medium);">Foreign Language</td><td><span class="badge">SHD</span></td><td>Trainer</td><td>1</td><td><span style="font-weight:600;color:var(--success-600);">18/20</span></td><td><span style="font-weight:600;color:var(--success-600);">19/20</span></td><td><span class="badge" style="background:var(--neutral-100);color:var(--text-secondary);">Skill</span></td><td><a href="marks-ta1.html" class="btn btn-ghost btn-sm">Marks</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+function filterSubjects(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('#subjectTable tbody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

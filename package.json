@@ -1,0 +1,20 @@
+{
+  "name": "cbad-student-management-system",
+  "version": "1.0.0",
+  "description": "Containerized Student Management System (CBAD Mini Project)",
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "start": "docker compose up --build",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "backend": "npm --prefix backend run dev",
+    "frontend": "npx serve -l 8080 ."
+  },
+  "keywords": [
+    "cbad",
+    "docker",
+    "student-management"
+  ],
+  "author": "Nikunj Hogade",
+  "license": "MIT"
+}

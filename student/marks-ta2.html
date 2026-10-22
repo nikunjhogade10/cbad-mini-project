@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TA-2 Marks — Student Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Academics</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">TA-2 Marks</span></nav>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">TA-2 Marks</h1>
+          <p class="label-text">Internal Assessment 2 — Semester V</p>
+        </div>
+        <div class="page-header-right">
+          <span class="badge badge-indigo" style="font-size:var(--text-sm);padding:6px 12px;">Academic Year 2026-27</span>
+          <a href="marks-ta1.html" class="btn btn-secondary btn-sm">← View TA-1</a>
+          <a href="marks-overall.html" class="btn btn-primary btn-sm">Overall Performance →</a>
+        </div>
+      </div>
+
+      <div class="grid grid-4 mb-6">
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div><div class="stat-card-label">Total Marks</div><div class="stat-card-value" style="margin-top:4px;">99/120</div></div>
+            <div class="stat-card-icon indigo"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01"/></svg></div>
+          </div>
+          <div class="stat-card-meta">Sum of all TA-2 marks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div><div class="stat-card-label">Average</div><div class="stat-card-value" style="margin-top:4px;">82.5%</div></div>
+            <div class="stat-card-icon green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+          </div>
+          <div class="stat-card-meta">↑ Improvement from TA-1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div><div class="stat-card-label">Highest Score</div><div class="stat-card-value" style="margin-top:4px;">18/20</div></div>
+            <div class="stat-card-icon amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg></div>
+          </div>
+          <div class="stat-card-meta">DAA — 90%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div><div class="stat-card-label">Overall Grade</div><div class="stat-card-value" style="margin-top:4px;color:var(--success-600);">A</div></div>
+            <div class="stat-card-icon green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg></div>
+          </div>
+          <div class="stat-card-meta">Consistent performance</div>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 2fr 1fr; gap: var(--space-4);">
+        <div class="table-container">
+          <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-default); display:flex; justify-content:space-between; align-items:center; background: var(--neutral-0);">
+            <div class="section-title-sm">Subject-wise TA-2 Marks</div>
+            <span class="badge badge-indigo">TA-2</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Subject</th><th>Code</th><th>Max Marks</th><th>Obtained</th><th>Percentage</th><th>Grade</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div style="font-weight:var(--fw-medium);">CBAD &amp; Containerization</div></td>
+                <td><span class="badge badge-gray">CBAD</span></td>
+                <td>20</td><td><strong>17</strong></td>
+                <td><div class="flex items-center gap-2"><div class="progress-bar-wrap sm" style="width:60px;"><div class="progress-bar green" data-pct="85"></div></div><span>85%</span></div></td>
+                <td><span class="badge badge-green">A</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot badge-dot-green"></span>Very Good</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:var(--fw-medium);">Program Elective - I</div></td>
+                <td><span class="badge badge-gray">PE-I</span></td>
+                <td>20</td><td><strong>15</strong></td>
+                <td><div class="flex items-center gap-2"><div class="progress-bar-wrap sm" style="width:60px;"><div class="progress-bar blue" data-pct="75"></div></div><span>75%</span></div></td>
+                <td><span class="badge badge-blue">B+</span></td>
+                <td><span class="badge badge-blue"><span class="badge-dot badge-dot-blue"></span>Good</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:var(--fw-medium);">Design &amp; Analysis of Algorithms</div></td>
+                <td><span class="badge badge-gray">DAA</span></td>
+                <td>20</td><td><strong style="color:var(--success-600);">18</strong></td>
+                <td><div class="flex items-center gap-2"><div class="progress-bar-wrap sm" style="width:60px;"><div class="progress-bar green" data-pct="90"></div></div><span>90%</span></div></td>
+                <td><span class="badge badge-green">A+</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot badge-dot-green"></span>Excellent</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:var(--fw-medium);">CNEL Network Engineering Lab</div></td>
+                <td><span class="badge badge-gray">CNEL</span></td>
+                <td>20</td><td><strong>16</strong></td>
+                <td><div class="flex items-center gap-2"><div class="progress-bar-wrap sm" style="width:60px;"><div class="progress-bar green" data-pct="80"></div></div><span>80%</span></div></td>
+                <td><span class="badge badge-green">A</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot badge-dot-green"></span>Very Good</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:var(--fw-medium);">CNEL Application Programming Models Lab</div></td>
+                <td><span class="badge badge-gray">CAPCAPML</span></td>
+                <td>20</td><td><strong>17</strong></td>
+                <td><div class="flex items-center gap-2"><div class="progress-bar-wrap sm" style="width:60px;"><div class="progress-bar green" data-pct="85"></div></div><span>85%</span></div></td>
+                <td><span class="badge badge-green">A</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot badge-dot-green"></span>Very Good</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:var(--fw-medium);">Container Based Application Development Lab</div></td>
+                <td><span class="badge badge-gray">CBADL</span></td>
+                <td>20</td><td><strong>16</strong></td>
+                <td><div class="flex items-center gap-2"><div class="progress-bar-wrap sm" style="width:60px;"><div class="progress-bar green" data-pct="80"></div></div><span>80%</span></div></td>
+                <td><span class="badge badge-green">A</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot badge-dot-green"></span>Very Good</span></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background:var(--neutral-50);">
+                <td colspan="3" style="font-weight:var(--fw-semibold);padding:0.75rem var(--space-4);">Total</td>
+                <td style="font-weight:var(--fw-bold);color:var(--secondary-600);padding:0.75rem var(--space-4);">99/120</td>
+                <td style="font-weight:var(--fw-bold);color:var(--secondary-600);padding:0.75rem var(--space-4);">82.5%</td>
+                <td style="padding:0.75rem var(--space-4);"><span class="badge badge-green">A</span></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">TA-2 Radar Chart</div></div>
+          <div class="card-body">
+            <div style="height:280px;"><canvas id="ta2Chart"></canvas></div>
+            <hr class="divider"/>
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <div style="font-size:var(--text-xs);font-weight:var(--fw-semibold);color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;">Grade Distribution</div>
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <span class="badge badge-green">A+ × 1</span>
+                <span class="badge badge-green">A × 4</span>
+                <span class="badge badge-blue">B+ × 1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/student-sidebar.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  new Chart(document.getElementById('ta2Chart'), {
+    type: 'radar',
+    data: {
+      labels: ['CBAD', 'PE-I', 'DAA', 'CNEL', 'CAPML', 'CBADL'],
+      datasets: [{
+        label: 'TA-2',
+        data: [85, 75, 90, 80, 85, 80],
+        backgroundColor: 'rgba(99,102,241,0.12)',
+        borderColor: 'rgba(99,102,241,0.8)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(99,102,241,1)',
+        pointRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { r: { min: 0, max: 100, ticks: { stepSize: 20, font: { family: 'Inter', size: 10 } }, pointLabels: { font: { family: 'Inter', size: 11 } } } },
+      plugins: { legend: { display: false } }
+    }
+  });
+});
+</script>
+</body>
+</html>

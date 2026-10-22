@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignments — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/design-system.css"/>
+  <link rel="stylesheet" href="../assets/css/components.css"/>
+  <link rel="stylesheet" href="../assets/css/sidebar.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebarContainer"></div>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <nav class="breadcrumb"><span class="breadcrumb-item">Assignments</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">All Assignments</span></nav>
+      </div>
+      <div class="topbar-right">
+        <a href="create-assignment.html" class="btn btn-primary btn-sm">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          Create Assignment
+        </a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">All Assignments</h1>
+          <p class="label-text">Manage and review all published assignments</p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom: var(--space-6);">
+        <div class="stat-card"><div class="stat-card-label">Total</div><div class="stat-card-value">7</div></div>
+        <div class="stat-card"><div class="stat-card-label">Submitted</div><div class="stat-card-value" style="color:var(--success-600);">3</div></div>
+        <div class="stat-card"><div class="stat-card-label">Pending Eval.</div><div class="stat-card-value" style="color:var(--warning-600);">2</div></div>
+        <div class="stat-card"><div class="stat-card-label">Not Submitted</div><div class="stat-card-value" style="color:var(--error-600);">2</div></div>
+      </div>
+
+      <!-- Filter -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="form-row" style="grid-template-columns: repeat(3,1fr);">
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <select class="form-control" onchange="filterTable()">
+                <option value="">All Subjects</option>
+                <option>Container Based Application Development</option>
+                <option>Program Elective - I</option>
+                <option>Design and Analysis of Algorithm</option>
+                <option>Cloud Network Engineering Lab</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-control" onchange="filterTable()">
+                <option value="">All Status</option>
+                <option>Submitted</option>
+                <option>Not Submitted</option>
+                <option>Pending Evaluation</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search</label>
+              <input class="form-control" type="text" id="assignSearch" placeholder="Search assignments…" oninput="filterTable()"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table" id="assignTable">
+          <thead>
+            <tr><th>Title</th><th>Subject</th><th>Unit</th><th>Assigned</th><th>Due Date</th><th>Max Marks</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="font-weight:var(--fw-medium);">CBAD Practical 1</td><td>Container Based Application Development</td><td>Unit 2</td><td>01 Sep 2026</td><td>10 Sep 2026</td><td>10</td><td><span class="badge badge-green">Submitted</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+            <tr><td style="font-weight:var(--fw-medium);">CBAD Assignment 1</td><td>Container Based Application Development</td><td>Unit 2</td><td>02 Sep 2026</td><td>15 Sep 2026</td><td>10</td><td><span class="badge badge-red">Not Submitted</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+            <tr><td style="font-weight:var(--fw-medium);">CBAD Project</td><td>Container Based Application Development</td><td>Unit 3</td><td>05 Sep 2026</td><td>20 Sep 2026</td><td>10</td><td><span class="badge badge-amber">Pending Evaluation</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+            <tr><td style="font-weight:var(--fw-medium);">SQL Query Optimization</td><td>Program Elective - I</td><td>Unit 3</td><td>28 Aug 2026</td><td>08 Sep 2026</td><td>15</td><td><span class="badge badge-green">Submitted</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+            <tr><td style="font-weight:var(--fw-medium);">ER Diagram for E-Commerce</td><td>Program Elective - I</td><td>Unit 1</td><td>20 Aug 2026</td><td>30 Aug 2026</td><td>10</td><td><span class="badge badge-green">Submitted</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+            <tr><td style="font-weight:var(--fw-medium);">Graph Algorithm Implementation</td><td>Design and Analysis of Algorithm</td><td>Unit 4</td><td>03 Sep 2026</td><td>18 Sep 2026</td><td>20</td><td><span class="badge badge-red">Not Submitted</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+            <tr><td style="font-weight:var(--fw-medium);">AWS EC2 Deployment</td><td>Cloud Network Engineering Lab</td><td>Unit 2</td><td>01 Sep 2026</td><td>12 Sep 2026</td><td>15</td><td><span class="badge badge-amber">Pending Evaluation</span></td><td><a href="submission-status.html" class="btn btn-ghost btn-sm">View</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container"></div>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin-sidebar.js"></script>
+<script>
+function filterTable() {
+  const q = document.getElementById('assignSearch').value.toLowerCase();
+  document.querySelectorAll('#assignTable tbody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
