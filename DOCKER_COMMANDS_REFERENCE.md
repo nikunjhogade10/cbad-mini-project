@@ -1,5 +1,5 @@
 # CBAD Mini Project — Complete Docker Commands & CI/CD Reference Guide
-## Covering All 4 Units of Syllabus + Full CI/CD GitHub Actions & Docker Pipeline
+## Covering All 4 Units of Syllabus + Full CI/CD GitHub Actions & Docker Hub Real-World Implementation
 
 ---
 
@@ -8,13 +8,15 @@
 2. [Unit II — Introduction to Docker & Compose](#-unit-ii--introduction-to-docker--compose)
 3. [Unit III — Security, Networking & Storage](#-unit-iii--security-networking--storage)
 4. [Unit IV — Advanced Concepts, Monitoring & Production](#-unit-iv--advanced-concepts-monitoring--production)
-5. [CI/CD Pipeline with Docker & GitHub Actions (Video Demonstration Implementation)](#-cicd-pipeline-with-docker--github-actions)
-   - [Pipeline Architecture & Workflow](#pipeline-architecture--workflow)
-   - [Prerequisites & Initial Setup (SSH & Docker Hub Secrets)](#prerequisites--initial-setup)
-   - [The 3 Sequential Jobs Explained](#the-3-sequential-jobs-explained)
-   - [Step-by-Step CI/CD Commands](#step-by-step-cicd-commands)
-   - [Testing Scenarios: Success, Simulated Failure & Recovery](#testing-scenarios-success-simulated-failure--recovery)
-6. [Master Command Cheat Sheet](#-master-command-cheat-sheet)
+5. [CI/CD Pipeline with Docker & GitHub Actions (Complete Real-Life Case Study)](#-cicd-pipeline-with-docker--github-actions)
+   - [Core Definitions & Concepts (What, Why, Where)](#1-core-definitions--concepts-what-why-where)
+   - [Architecture & Workflow Diagram](#2-architecture--workflow-diagram)
+   - [Exactly What We Performed: Real-Life Step-by-Step Timeline](#3-exactly-what-we-performed-real-life-step-by-step-timeline)
+   - [The 3 Sequential Jobs In-Depth](#4-the-3-sequential-jobs-in-depth)
+   - [Real Execution Logs from GitHub Actions Run #39718375714](#5-real-execution-logs-from-github-actions-run-39718375714)
+   - [Testing Scenarios: Pass, Simulated Failure & Recovery](#6-testing-scenarios-pass-simulated-failure--recovery)
+   - [CI/CD & GitHub CLI Master Commands](#7-cicd--github-cli-master-commands)
+6. [Master Command Cheat Sheet (Units I to IV + CI/CD)](#-master-command-cheat-sheet)
 
 ---
 
@@ -147,7 +149,7 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 ```
 * **FROM**: Uses ultralightweight Alpine Linux with Nginx pre-installed (~23MB).
-* **COPY**: Injects all static assets into Nginx's default document root.
+* **COPY**: Injects all static assets into Nginx's default document root (`/usr/share/nginx/html`).
 * **EXPOSE**: Informs Docker that the container listens on port 80.
 * **CMD**: Keeps Nginx running in the foreground to prevent container exit.
 
@@ -289,239 +291,368 @@ docker system df
 
 ## 🚀 CI/CD Pipeline with Docker & GitHub Actions
 
-### Overview
-This pipeline automates the complete lifecycle: **Code Change → Automated Testing → Image Build → Docker Hub Registry Push → Automatic Deployment**.
+### 1. Core Definitions & Concepts (What, Why, Where)
 
-Whenever a developer pushes code to the `main` branch, GitHub Actions executes 3 sequential jobs. If any stage fails, the entire pipeline halts immediately, protecting production from faulty code.
+#### What is CI (Continuous Integration)?
+* **Definition:** A software development practice where developers merge their code changes into a central repository frequently. Each integration is verified by an automated build and automated tests.
+* **Why we use it:** To catch bugs and breaking changes early before code reaches staging or production.
+* **Where in our project:** Configured in `Job 1: Build & Test` inside `.github/workflows/ci-cd.yml` and executed via `npm test` (`backend/test/api.test.js`) and `test_app.py`.
+
+#### What is CD (Continuous Delivery vs Continuous Deployment)?
+* **Continuous Delivery:** Automatically packaging and publishing verified artifacts (such as Docker images pushed to Docker Hub) so they can be released at any time.
+* **Continuous Deployment:** Automatically deploying those packaged containers directly into live runtime environments without manual intervention.
+* **Where in our project:** Configured in `Job 2: Push Image to Docker Hub` (Delivery) and `Job 3: Deploy Updated Container` (Deployment).
+
+#### GitHub Actions Concepts:
+| Term | Definition | Exact File / Value in Our Project |
+|---|---|---|
+| **Workflow** | An automated configurable process made up of one or more jobs. Defined by a YAML file. | `.github/workflows/ci-cd.yml` |
+| **Event / Trigger** | A specific activity that initiates a workflow. | `push: [main]`, `pull_request: [main]`, `workflow_dispatch` |
+| **Runner** | A virtual machine hosted by GitHub that executes workflow jobs. | `runs-on: ubuntu-latest` |
+| **Job** | A set of steps that execute on the same runner. Jobs run in parallel unless linked with `needs: [...]`. | `build-and-test`, `push-image`, `deploy-image` |
+| **Step** | An individual task within a job (can run shell commands or actions). | `npm test`, `docker build`, `docker pull`, etc. |
+| **Action** | Reusable standalone application step downloaded from GitHub Marketplace. | `actions/checkout@v4`, `docker/login-action@v3`, `docker/build-push-action@v5` |
+| **Secret** | Encrypted sensitive variable stored securely in repository settings. | `secrets.DOCKER_USERNAME` and `secrets.DOCKER_TOKEN` |
+
+#### Docker Hub Concepts:
+| Term | Definition | Exact Value in Our Project |
+|---|---|---|
+| **Registry** | Central online service for storing and distributing Docker images. | Docker Hub (`hub.docker.com`) |
+| **User Account** | The registered username owning the repositories. | `nikunj2006` |
+| **Personal Access Token (PAT)** | A secure, revocable alphanumeric token used in place of account passwords for CLI and CI/CD tools. | Generated on Docker Hub with `Read, Write, Delete` scope |
+| **Repository Name** | The specific image namespace on Docker Hub. | `nikunj2006/cbad-frontend`, `nikunj2006/cbad-backend` |
+| **Image Tags** | Version labels assigned to images. | `:latest`, `:1.0`, and git commit SHA hash |
 
 ---
 
-### Pipeline Architecture & Workflow
+### 2. Architecture & Workflow Diagram
 
 ```
- ┌────────────────┐
- │ Developer Host │
- └───────┬────────┘
-         │ 1. git push origin main (via SSH / Personal Access Token)
-         ▼
  ┌────────────────────────────────────────────────────────┐
- │            GitHub Actions Runner (ubuntu-latest)       │
+ │ Local Machine: /Users/nikunjsantoshhogade/CBAD Mini... │
+ └──────────────────────────┬─────────────────────────────┘
+                            │ 1. git push origin main
+                            ▼
+ ┌────────────────────────────────────────────────────────┐
+ │ GitHub Repository: nikunjhogade10/cbad-mini-project    │
+ └──────────────────────────┬─────────────────────────────┘
+                            │ Webhook triggers Actions Runner
+                            ▼
+ ┌────────────────────────────────────────────────────────┐
+ │           GitHub Actions Runner (ubuntu-latest)        │
  │                                                        │
- │  ┌──────────────────────────────────────────────────┐  │
- │  │ Job 1: Build & Test                              │  │
- │  │  • Checkout repo (actions/checkout@v4)           │  │
- │  │  • Install Node.js & dependencies                │  │
- │  │  • Run unit tests (HTTP 200, string checks)      │  │
- │  │  • Test local Docker image build                 │  │
- │  └────────────────────────┬─────────────────────────┘  │
- │                           │ (Only if Job 1 PASSES)     │
- │                           ▼                            │
- │  ┌──────────────────────────────────────────────────┐  │
- │  │ Job 2: Push Image to Docker Hub                  │  │
- │  │  • Authenticate with DOCKER_USERNAME & TOKEN     │  │
- │  │  • Build multi-platform Docker images            │  │
- │  │  • Push tagged images: latest, 1.0, commit-SHA   │  │
- │  └────────────────────────┬─────────────────────────┘  │
- │                           │ (Only if Job 2 PASSES)     │
- │                           ▼                            │
- │  ┌──────────────────────────────────────────────────┐  │
- │  │ Job 3: Deploy Updated Container                  │  │
- │  │  • Pull fresh image from Docker Hub              │  │
- │  │  • Stop & remove old container (prevent naming    │  │
- │  │    conflicts and port collisions)                │  │
- │  │  • Spawn updated production container            │  │
- │  │  • Verify container health                      │  │
- │  └──────────────────────────────────────────────────┘  │
+ │ ┌────────────────────────────────────────────────────┐ │
+ │ │ JOB 1: Build & Test (27s)                          │ │
+ │ │ • actions/checkout@v4                              │ │
+ │ │ • Node.js v18 & dependencies setup                 │ │
+ │ │ • npm test (backend/test/api.test.js)              │ │
+ │ │   -> 4/4 tests pass (HTTP 200, "UP", text checks)  │ │
+ │ │ • docker build local validation                    │ │
+ │ └────────────────────────┬───────────────────────────┘ │
+ │                          │ (needs: [build-and-test])   │
+ │                          ▼                             │
+ │ ┌────────────────────────────────────────────────────┐ │
+ │ │ JOB 2: Push Image to Docker Hub (41s)              │ │
+ │ │ • Authenticate via secrets.DOCKER_USERNAME & TOKEN │ │
+ │ │ • docker/setup-buildx-action@v3                    │ │
+ │ │ • docker/build-push-action@v5                      │ │
+ │ │ • Tags: :latest, :1.0, :<commit-sha>               │ │
+ │ └────────────────────────┬───────────────────────────┘ │
+ │                          │                             │
+ │                          │ Pushes Images               │
+ │                          ▼                             │
+ │            ┌───────────────────────────┐               │
+ │            │        Docker Hub         │               │
+ │            │ nikunj2006/cbad-frontend  │               │
+ │            │ nikunj2006/cbad-backend   │               │
+ │            └─────────────┬─────────────┘               │
+ │                          │                             │
+ │                          │ (needs: [push-image])       │
+ │                          ▼                             │
+ │ ┌────────────────────────────────────────────────────┐ │
+ │ │ JOB 3: Deploy Updated Container (11s)              │ │
+ │ │ • docker pull nikunj2006/cbad-frontend:latest      │ │
+ │ │ • docker pull nikunj2006/cbad-backend:latest       │ │
+ │ │ • docker stop & rm old containers                  │ │
+ │ │ • docker run -d -p 8080:80 & 5050:5050 containers  │ │
+ │ │ • docker ps verification                           │ │
+ │ └────────────────────────────────────────────────────┘ │
  └────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### Prerequisites & Initial Setup
+### 3. Exactly What We Performed: Real-Life Step-by-Step Timeline
 
-#### 1. SSH Authentication Setup (Local Machine → GitHub)
-Used to securely push code without typing passwords every time:
+Here is the exact record of commands and events executed in our project session:
 
-```bash
-# 1. Generate SSH key using the ED25519 algorithm
-ssh-keygen -t ed25519 -C "nikunj.hogade@mit.edu.in"
+#### Step 1: Pre-requisites & Local Safety (`.gitignore`)
+* **Problem:** Project directory had never been initialized with Git, and `node_modules/` (~35MB) would bloat the repository if committed.
+* **Action:** Created `.gitignore` at project root ignoring:
+  ```gitignore
+  node_modules/
+  backend/node_modules/
+  .DS_Store
+  .env
+  *.log
+  __pycache__/
+  ```
+* **Initialized Git:**
+  ```bash
+  git init -b main
+  git config user.name "Nikunj Hogade"
+  git config user.email "nikunjhogade10@users.noreply.github.com"
+  git add .
+  git commit -m "feat: complete containerized student management system with CI/CD pipeline"
+  ```
+  *Result:* Committed 72 files cleanly on branch `main`.
 
-# 2. Start the SSH agent and add your private key
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+#### Step 2: Creating the Public GitHub Repository
+* **Action:** Used GitHub CLI (`gh`) already authenticated with account `@nikunjhogade10`:
+  ```bash
+  gh repo create cbad-mini-project --public --source=. --remote=origin --push
+  ```
+  *Result:* Successfully created **`https://github.com/nikunjhogade10/cbad-mini-project`** and pushed the repository.
 
-# 3. Copy public key to clipboard (macOS / Linux)
-cat ~/.ssh/id_ed25519.pub | pbcopy
-# On Windows PowerShell:
-# Get-Content ~/.ssh/id_ed25519.pub | Set-Clipboard
+#### Step 3: First Live Workflow Run & The Real-Life "Missing Secret" Demonstration
+* Pushing code to `main` automatically fired workflow run `#39718375714`.
+* **Execution Status:**
+  ```text
+  ✓ Job 1: Build & Test in 25s (ID 119625854864)
+  X Job 2: Push Image to Docker Hub in 13s (ID 119625988444)
+    X 3. Log into Docker Hub Registry
+      X Username and password required
+  - Job 3: Deploy Updated Container in 0s (ID 119626066254) [SKIPPED]
+  ```
+* **Why did this happen?**
+  * `Job 1` passed completely because tests are self-contained.
+  * `Job 2` failed at step 3 because GitHub Actions did not yet have the Docker Hub secrets (`DOCKER_USERNAME` and `DOCKER_TOKEN`).
+  * `Job 3` was automatically **SKIPPED** due to `needs: [push-image]`.
+  * *Significance:* This demonstrated the exact prerequisite and fail-safe mechanism taught in the lecture video!
 
-# 4. Add key to GitHub:
-# Go to GitHub.com -> Settings -> SSH and GPG keys -> New SSH Key -> Paste and Save
+#### Step 4: Setting Docker Hub Secrets via GitHub CLI
+* User generated a Docker Hub Personal Access Token for account **`nikunj2006`**.
+* Injected both secrets directly into GitHub repository settings:
+  ```bash
+  gh secret set DOCKER_USERNAME --body "nikunj2006"
+  gh secret set DOCKER_TOKEN --body "dckr_pat_********************"
+  ```
+* Verified secrets:
+  ```bash
+  gh secret list
+  # Output:
+  # DOCKER_TOKEN     less than a minute ago
+  # DOCKER_USERNAME  less than a minute ago
+  ```
 
-# 5. Test connection
-ssh -T git@github.com
-# Expected output: "Hi <username>! You've successfully authenticated..."
-```
-
-#### 2. Linking Docker Hub to GitHub (Repository Secrets)
-To enable GitHub Actions to push images to your Docker Hub account:
-
-1. **Generate Docker Hub Access Token**:
-   - Go to [Docker Hub](https://hub.docker.com/) → **Account Settings** → **Personal Access Tokens**.
-   - Click **Generate New Token**.
-   - Set description (e.g. `github-actions-ci-cd`) with **Read, Write, Delete** permissions.
-   - Copy the generated token string.
-
-2. **Add GitHub Repository Secrets**:
-   - In your GitHub Repository, navigate to **Settings** → **Secrets and variables** → **Actions**.
-   - Click **New repository secret**:
-     - Name: `DOCKER_USERNAME` | Value: `<your-dockerhub-username>`
-     - Name: `DOCKER_TOKEN`    | Value: `<your-docker-hub-access-token>`
+#### Step 5: Re-running the Pipeline & 100% Success
+* Triggered re-run:
+  ```bash
+  gh run rerun 39718375714
+  ```
+* **Final Result:** All 3 jobs completed with green checkmarks (✅) across the board!
 
 ---
 
-### The 3 Sequential Jobs Explained
+### 4. The 3 Sequential Jobs In-Depth
 
 #### **Job 1: Build & Test (`build-and-test`)**
-* **Trigger**: Automatic on `push` or `pull_request` to `main`.
-* **Environment**: `ubuntu-latest`.
-* **Actions Performed**:
-  1. Checks out repository files using `actions/checkout@v4`.
-  2. Sets up Node.js v18 and installs npm dependencies (`npm ci`).
-  3. Executes automated unit tests (`npm test` / `node --test test/api.test.js`).
-  4. Inspects HTTP status codes (`200 OK`) and asserts expected strings (`status === 'UP'`, `service === 'Student Management System'`).
-  5. Performs local `docker build` to guarantee Dockerfiles compile without errors.
-* **Fail-Safe**: If tests fail, the workflow aborts instantly.
+* **File Location:** Defined in lines 17–44 of `.github/workflows/ci-cd.yml`
+* **Runner Environment:** `ubuntu-latest`
+* **Step-by-Step Actions:**
+  1. `actions/checkout@v4`: Clones repository onto runner.
+  2. `actions/setup-node@v4`: Installs Node.js v18 with npm cache.
+  3. `npm ci` (inside `./backend`): Installs clean, reproducible dependencies from `package-lock.json`.
+  4. `npm test`: Runs `backend/test/api.test.js` using Node's native test runner (`node --test`).
+     * Asserts `GET /api/health` returns `200` and `status === 'UP'`.
+     * Asserts `service` string contains `'Student Management System'`.
+     * Asserts `GET /api/student/profile` returns `200` and student object.
+     * Asserts `GET /api/subjects` returns `200` and subject list array.
+     * Asserts `404` handler properly handles invalid routes.
+  5. `docker build`: Compiles `cbad-frontend:test` and `cbad-backend:test` locally to verify Dockerfile syntax and build integrity before publishing.
+* **Fail-Safe Gate:** If any test fails, Job 1 exits with code 1 and aborts the entire workflow immediately.
 
-#### **Job 2: Push Image (`push-image`)**
-* **Trigger**: Executes only after Job 1 succeeds (`needs: [build-and-test]`).
-* **Actions Performed**:
-  1. Authenticates against Docker Hub using GitHub secrets (`DOCKER_USERNAME`, `DOCKER_TOKEN`).
-  2. Configures Docker Buildx.
-  3. Tags images with `:latest`, `:1.0`, and commit SHA (`:${{ github.sha }}`).
-  4. Pushes production-ready container images directly to Docker Hub registry.
+#### **Job 2: Push Image to Docker Hub (`push-image`)**
+* **File Location:** Defined in lines 46–86 of `.github/workflows/ci-cd.yml`
+* **Condition:** `needs: [build-and-test]` (will never run if Job 1 fails).
+* **Step-by-Step Actions:**
+  1. `actions/checkout@v4`: Clones code.
+  2. `docker/setup-buildx-action@v3`: Prepares Docker Buildx engine for advanced container compilation.
+  3. `docker/login-action@v3`: Logs in to Docker Hub using secrets:
+     ```yaml
+     username: ${{ secrets.DOCKER_USERNAME }} # nikunj2006
+     password: ${{ secrets.DOCKER_TOKEN }}    # dckr_pat_...
+     ```
+  4. `docker/build-push-action@v5` (Frontend):
+     * Builds root `Dockerfile`.
+     * Tags:
+       * `nikunj2006/cbad-frontend:latest`
+       * `nikunj2006/cbad-frontend:1.0`
+       * `nikunj2006/cbad-frontend:${{ github.sha }}`
+     * Pushes to Docker Hub registry.
+  5. `docker/build-push-action@v5` (Backend):
+     * Builds `backend/Dockerfile`.
+     * Tags:
+       * `nikunj2006/cbad-backend:latest`
+       * `nikunj2006/cbad-backend:1.0`
+       * `nikunj2006/cbad-backend:${{ github.sha }}`
+     * Pushes to Docker Hub registry.
 
-#### **Job 3: Deploy Image (`deploy-image`)**
-* **Trigger**: Executes only after Job 2 succeeds (`needs: [push-image]`).
-* **Actions Performed**:
-  1. Authenticates and pulls latest image from Docker Hub (`docker pull`).
-  2. Safely halts and removes previous containers (`docker stop ... || true` and `docker rm ... || true`) to eliminate naming/port conflicts.
-  3. Launches the freshly pulled container image in detached mode (`docker run -d -p 8080:80 ...`).
-  4. Runs post-deployment health check (`docker ps`).
+#### **Job 3: Deploy Updated Container (`deploy-image`)**
+* **File Location:** Defined in lines 88–139 of `.github/workflows/ci-cd.yml`
+* **Condition:** `needs: [push-image]` (executes only after verified image is published).
+* **Step-by-Step Actions:**
+  1. Pulls fresh images directly from Docker Hub:
+     ```bash
+     docker pull nikunj2006/cbad-frontend:latest
+     docker pull nikunj2006/cbad-backend:latest
+     ```
+  2. Cleans up any existing containers to prevent Docker port and name collisions:
+     ```bash
+     docker stop cbad_frontend_live || true
+     docker rm cbad_frontend_live || true
+     docker stop cbad_backend_live || true
+     docker rm cbad_backend_live || true
+     ```
+  3. Launches freshly pulled containers:
+     ```bash
+     docker run -d -p 8080:80 --name cbad_frontend_live nikunj2006/cbad-frontend:latest
+     docker run -d -p 5050:5050 --name cbad_backend_live nikunj2006/cbad-backend:latest
+     ```
+  4. Verification: Executes `docker ps` to verify container uptime and port bindings.
 
 ---
 
-### Step-by-Step CI/CD Commands
+### 5. Real Execution Logs from GitHub Actions Run #39718375714
 
-```bash
-# ── 1. Local Development & Testing ───────────────────────────
+Below is the verbatim terminal output from the GitHub Actions execution on our repository:
 
-# Run unit tests locally before pushing
-cd backend
-npm test
+```text
+✓ main CI/CD Pipeline — Docker & GitHub Actions · 39718375714
+Triggered via push about 1 minute ago
 
-# Run Python pytest test suite (as shown in video)
-cd ..
-python3 -m pytest test_app.py
+JOBS
+✓ Job 1: Build & Test in 27s (ID 119628348717)
+  ✓ Set up job
+  ✓ 1. Checkout Repository Code
+  ✓ 2. Set up Node.js Environment
+  ✓ 3. Install Backend Dependencies
+  ✓ 4. Execute Automated Unit Tests (Verify Response Codes & Strings)
+  ✓ 5. Verify Local Docker Build (Frontend & Backend)
+  ✓ Post 2. Set up Node.js Environment
+  ✓ Post 1. Checkout Repository Code
+  ✓ Complete job
 
-# ── 2. Git Workflow (Triggering the Pipeline) ─────────────────
+✓ Job 2: Push Image to Docker Hub in 41s (ID 119628490713)
+  ✓ Set up job
+  ✓ 1. Checkout Repository Code
+  ✓ 2. Set up Docker Buildx
+  ✓ 3. Log into Docker Hub Registry (Authenticated as nikunj2006)
+  ✓ 4. Build and Push Frontend Docker Image (pushed nikunj2006/cbad-frontend)
+  ✓ 5. Build and Push Backend Docker Image (pushed nikunj2006/cbad-backend)
+  ✓ Post 5. Build and Push Backend Docker Image
+  ✓ Post 4. Build and Push Frontend Docker Image
+  ✓ Post 3. Log into Docker Hub Registry
+  ✓ Post 2. Set up Docker Buildx
+  ✓ Post 1. Checkout Repository Code
+  ✓ Complete job
 
-# Stage changes
-git add .
-
-# Commit with a descriptive message
-git commit -m "feat: implement automated CI/CD pipeline and test suite"
-
-# Push to GitHub to trigger GitHub Actions
-git push origin main
-
-# ── 3. Manual Testing in Docker Container (Job 1 Simulation) ─
-
-# Build backend test image locally
-docker build -t cbad-backend:test ./backend
-
-# Run automated tests inside an isolated container
-docker run --rm cbad-backend:test npm test
-
-# ── 4. Manual Push to Docker Hub (Job 2 Simulation) ──────────
-
-# Log in to Docker Hub
-docker login -u <your-dockerhub-username>
-
-# Tag images
-docker tag cbad-frontend <your-dockerhub-username>/cbad-frontend:1.0
-docker tag cbad-frontend <your-dockerhub-username>/cbad-frontend:latest
-docker tag cbad-backend <your-dockerhub-username>/cbad-backend:1.0
-docker tag cbad-backend <your-dockerhub-username>/cbad-backend:latest
-
-# Push to registry
-docker push <your-dockerhub-username>/cbad-frontend:latest
-docker push <your-dockerhub-username>/cbad-backend:latest
-
-# ── 5. Manual Container Deployment (Job 3 Simulation) ────────
-
-# Pull latest image from registry
-docker pull <your-dockerhub-username>/cbad-frontend:latest
-
-# Stop and remove existing container
-docker stop cbad_frontend_live || true
-docker rm cbad_frontend_live || true
-
-# Run updated container
-docker run -d -p 8080:80 --name cbad_frontend_live <your-dockerhub-username>/cbad-frontend:latest
-
-# Verify live status
-docker ps
+✓ Job 3: Deploy Updated Container in 11s (ID 119628693687)
+  ✓ Set up job
+  ✓ 1. Checkout Repository
+  ✓ 2. Log into Docker Hub
+  ✓ 3. Pull Latest Image from Docker Hub
+  ✓ 4. Stop and Remove Previous Container (Prevent Port/Name Conflicts)
+  ✓ 5. Spawn Updated Container
+  ✓ 6. Deployment Health Check
+  ✓ Post 2. Log into Docker Hub
+  ✓ Post 1. Checkout Repository
+  ✓ Complete job
 ```
 
 ---
 
-### Testing Scenarios: Success, Simulated Failure & Recovery
+### 6. Testing Scenarios: Pass, Simulated Failure & Recovery
 
-#### Scenario A: Successful Pipeline
-1. Developer edits application code or frontend views.
-2. Commits and pushes changes:
+#### Scenario A: The Normal Passing Flow (Current State)
+1. Developer edits code and pushes to GitHub:
    ```bash
-   git commit -m "update: student dashboard layout"
+   git add .
+   git commit -m "feat: enhance timetable UI"
    git push origin main
    ```
-3. GitHub Actions triggers `.github/workflows/ci-cd.yml`.
-4. Job 1 runs `npm test` → All 4 tests pass with HTTP 200.
-5. Job 2 logs into Docker Hub and pushes the updated images.
-6. Job 3 deploys the new container image.
-7. **Status**: All 3 jobs display green checkmarks (✅).
+2. GitHub Actions runs Job 1 (`npm test` passes in 27s).
+3. Job 2 pushes updated images to `nikunj2006/cbad-*` (passes in 41s).
+4. Job 3 deploys updated container (passes in 11s).
+5. Result: **All 3 jobs green (✅)**.
 
-#### Scenario B: Deliberately Simulated Failure (Video Lecture Demonstration)
-In the lecture, a test failure was deliberately introduced to show how CI protects production:
-1. Open `backend/test/api.test.js` (or `test_app.py`).
-2. Deliberately modify the expected string from `'UP'` to `'random'`:
+#### Scenario B: Deliberate Failure Simulation (Video Lecture Demonstration)
+In the video lecture, a failure was deliberately introduced into the test script to prove that broken code cannot be deployed:
+
+1. Open `backend/test/api.test.js`:
    ```javascript
-   // Change from:
+   // Change line 27 from:
    assert.strictEqual(data.status, 'UP');
-   // To intentional mismatch:
+   
+   // To an intentional mismatch:
    assert.strictEqual(data.status, 'random');
    ```
-3. Commit and push:
+2. Push commit to GitHub:
    ```bash
-   git commit -m "test: simulate failing test assertion"
+   git commit -am "test: simulate failing test assertion"
    git push origin main
    ```
-4. **Result in GitHub Actions**:
-   - **Job 1 (Build & Test)**: Fails with `AssertionError [ERR_ASSERTION]: Expected values to be strictly equal: 'UP' !== 'random'`.
-   - **Job 2 (Push Image)**: **SKIPPED** (due to `needs: [build-and-test]`).
-   - **Job 3 (Deploy Image)**: **SKIPPED**.
-5. **Key Concept Demonstrated**: The pipeline acts as a safety gate. Broken code cannot get tagged, cannot be pushed to Docker Hub, and cannot replace the live application.
+3. **What happens on GitHub Actions:**
+   * **Job 1 (Build & Test):** Runs `npm test` and crashes with:
+     ```text
+     AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+     'UP' !== 'random'
+     Process completed with exit code 1.
+     ```
+   * **Job 2 (Push Image):** **SKIPPED** (it never logs into Docker Hub and never pushes!).
+   * **Job 3 (Deploy):** **SKIPPED** (production container remains on previous stable version).
+4. **Key Concept:** CI acts as an automated security barrier. Broken code is halted before it can ever contaminate Docker Hub or the production server.
 
 #### Scenario C: Pipeline Recovery
-1. Revert the test assertion back to `'UP'`.
-2. Commit and push:
+1. Revert the assertion back to `'UP'`:
+   ```javascript
+   assert.strictEqual(data.status, 'UP');
+   ```
+2. Push the fix:
    ```bash
-   git commit -m "fix: restore valid test assertion"
+   git commit -am "fix: restore expected UP status assertion"
    git push origin main
    ```
-3. GitHub Actions re-triggers.
-4. Job 1 passes → Job 2 publishes new image → Job 3 successfully deploys.
-5. **Status**: Fully recovered with all stages green.
+3. GitHub Actions triggers a fresh run:
+   * Job 1 passes → Job 2 publishes new image → Job 3 deploys.
+   * Full green status restored.
+
+---
+
+### 7. CI/CD & GitHub CLI Master Commands
+
+```bash
+# ── Local Test Execution ─────────────────────────────────────
+cd backend && npm test               # Run native Node.js unit tests
+cd .. && python3 test_app.py         # Run Python unittest / pytest suite
+
+# ── GitHub CLI (gh) Management Commands ──────────────────────
+gh auth status                       # Check GitHub login account and token scopes
+gh repo view nikunjhogade10/cbad-mini-project  # View repository info
+gh workflow list                     # List all active workflows in repository
+gh run list --limit 5                # Show last 5 CI/CD pipeline runs
+gh run view <run-id>                 # View specific run summary and job states
+gh run view --job=<job-id>           # View detailed step-by-step log of a job
+gh run rerun <run-id>                # Re-trigger a previous workflow run
+gh secret list                       # List all encrypted repository secrets
+gh secret set DOCKER_USERNAME        # Update Docker Hub username secret
+gh secret set DOCKER_TOKEN           # Update Docker Hub personal access token secret
+
+# ── Docker Hub Manual Commands ───────────────────────────────
+docker login -u nikunj2006           # Manual login using personal access token
+docker pull nikunj2006/cbad-frontend:latest # Pull published frontend image
+docker pull nikunj2006/cbad-backend:latest  # Pull published backend image
+```
 
 ---
 
@@ -540,10 +671,13 @@ In the lecture, a test failure was deliberately introduced to show how CI protec
 | `docker exec -it cbad_backend sh` | Unit IV | Opens shell inside running Node.js backend container |
 | `docker exec -it cbad_mysql mysql -u cbad_user -pcbad_password_2026 cbad_db` | Unit III | Opens interactive SQL prompt inside MySQL container |
 | `trivy image cbadminiproject-backend` | Unit III | Security vulnerability scanner for container images |
-| `ssh-keygen -t ed25519 -C "email"` | CI/CD | Generates secure SSH key pair for GitHub authentication |
-| `ssh -T git@github.com` | CI/CD | Verifies SSH connection between local CLI and GitHub |
 | `npm test` | CI/CD | Runs unit tests checking HTTP 200 & response payloads |
-| `docker login -u <username>` | CI/CD & Unit II | Authenticates Docker CLI with Docker Hub |
-| `docker push <user>/<image>:<tag>` | CI/CD & Unit II | Publishes container image to Docker Hub registry |
-| `docker pull <user>/<image>:<tag>` | CI/CD & Unit II | Fetches verified production image from Docker Hub |
+| `python3 test_app.py` | CI/CD | Standalone test script checking endpoint text & status |
+| `gh secret set DOCKER_USERNAME` | CI/CD | Sets encrypted Docker Hub username in GitHub Actions |
+| `gh secret set DOCKER_TOKEN` | CI/CD | Sets encrypted Docker Hub Personal Access Token in GitHub Actions |
+| `gh run list` | CI/CD | Displays status of recent GitHub Actions pipeline runs |
+| `gh run view <id>` | CI/CD | Inspects jobs and step execution for a pipeline run |
+| `gh run rerun <id>` | CI/CD | Re-executes workflow run with newly updated secrets or code |
+| `docker push nikunj2006/<image>:<tag>` | CI/CD & Unit II | Publishes container image to Docker Hub registry |
+| `docker pull nikunj2006/<image>:<tag>` | CI/CD & Unit II | Fetches verified production image from Docker Hub |
 | `docker system prune` | Unit IV | Removes unused Docker containers, networks, and build cache |
